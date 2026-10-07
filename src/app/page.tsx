@@ -1,69 +1,81 @@
-import Image from "next/image";
-import styles from "./page.module.css";
-
 export default function Home() {
+  async function handleSubmit(data: FormData) {
+    "use server";
+
+    const name = data.get("name");
+    const age = data.get("age");
+
+    const response = await fetch("http://localhost:3000/api/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, age }),
+    });
+
+    console.log(await response.json());
+  }
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
+    <main className="min-h-screen bg-black flex items-center justify-center px-4">
+      <form
+        action={handleSubmit}
+        className="w-full max-w-md bg-zinc-950 border border-zinc-800 p-8 rounded-xl"
+      >
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-bold text-purple-500">
+            Cadastro de Usuário
           </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
+
+          <p className="text-zinc-400 mt-2 text-sm">
+            Preencha os dados abaixo para cadastrar um usuário.
           </p>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        <div className="flex flex-col gap-2 mb-5">
+          <label
+            htmlFor="name"
+            className="text-sm font-medium text-zinc-200"
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Nome
+          </label>
+
+          <input
+            type="text"
+            name="name"
+            id="name"
+            required
+            className="h-11 bg-zinc-900 border border-zinc-700 text-white px-4 rounded-md outline-none focus:border-purple-500 placeholder:text-zinc-500"
+            placeholder="Digite seu nome"
+          />
         </div>
-      </main>
-    </div>
+
+        <div className="flex flex-col gap-2 mb-7">
+          <label
+            htmlFor="age"
+            className="text-sm font-medium text-zinc-200"
+          >
+            Idade
+          </label>
+
+          <input
+            type="number"
+            name="age"
+            id="age"
+            min="0"
+            required
+            className="h-11 bg-zinc-900 border border-zinc-700 text-white px-4 rounded-md outline-none focus:border-purple-500 placeholder:text-zinc-500"
+            placeholder="Digite sua idade"
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="w-full h-11 bg-purple-700 hover:bg-purple-600 text-white font-semibold rounded-md transition"
+        >
+          Cadastrar
+        </button>
+      </form>
+    </main>
   );
 }
